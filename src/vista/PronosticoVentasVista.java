@@ -4,13 +4,15 @@
  */
 package vista;
 
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Santiago
  */
-public class VentanaPrincipal extends javax.swing.JFrame {
+public class PronosticoVentasVista extends javax.swing.JFrame {
 
     /**
      * Creates new form VentanaPrincipal
@@ -19,8 +21,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     DefaultTableModel modeloTablaHistoricoDeVentas = new DefaultTableModel();
     DefaultTableModel modeloTablaPronosticoDeVentas = new DefaultTableModel();
     
-    
-    public VentanaPrincipal() {
+    public PronosticoVentasVista() {
         cargarModeloTablaHistoricoDeVentas();
         cargarModeloTablaPronosticoDeVentas();
         initComponents();
@@ -53,6 +54,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         return Double.parseDouble(txtPronosticoDeVentas.getText());
     }
     
+    public void agregarDatosFilaHistoricoDeVentas(Object[] datos) {
+        modeloTablaHistoricoDeVentas.addRow(datos);
+    }
+    
     // Modelos de tabla
     public void cargarModeloTablaHistoricoDeVentas() {
         modeloTablaHistoricoDeVentas.addColumn("X");
@@ -65,6 +70,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public void cargarModeloTablaPronosticoDeVentas() {
         modeloTablaPronosticoDeVentas.addColumn("Año");
         modeloTablaPronosticoDeVentas.addColumn("Pronóstico de Ventas");
+    }
+    
+    // Listeners
+    public void addBtnAgregarAnioListener(ActionListener e) {
+        btnAgregarAnio.addActionListener(e);
+    }
+    public void addBtnBorrarAnioListener(ActionListener e) {
+        btnBorrarAnio.addActionListener(e);
+    }
+    public void addBtnModificarAnioListener(ActionListener e) {
+        btnModificarAnio.addActionListener(e);
+    }
+    public void addBtnNuevoPronosticoListener(ActionListener e) {
+        btnNuevoPronostico.addActionListener(e);
     }
     
     /**
@@ -340,20 +359,21 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VentanaPrincipal().setVisible(true);
+                new PronosticoVentasVista().setVisible(true);
             }
         });
     }

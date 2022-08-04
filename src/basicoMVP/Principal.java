@@ -4,7 +4,9 @@
  */
 package basicoMVP;
 
-import vista.VentanaPrincipal;
+import controlador.PronosticoVentasControlador;
+import modelo.PronosticoVentasModelo;
+import vista.PronosticoVentasVista;
 
 /**
  *
@@ -12,6 +14,8 @@ import vista.VentanaPrincipal;
  */
 public class Principal {
     public static void main(String[] args) {
-        VentanaPrincipal principal = new VentanaPrincipal();
+        PronosticoVentasModelo modelo = new PronosticoVentasModelo();
+        PronosticoVentasVista vista = new PronosticoVentasVista();
+        PronosticoVentasControlador controlador = new PronosticoVentasControlador(modelo, vista);
     }
 }
