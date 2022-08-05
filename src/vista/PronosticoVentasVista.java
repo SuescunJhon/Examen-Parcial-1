@@ -23,22 +23,44 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
      * Creates new form VentanaPrincipal
      */
     
-    DefaultTableModel modeloTablaHistoricoDeVentas = new DefaultTableModel();
+    DefaultTableModel modeloTablaHistoricoDeVentas = new DefaultTableModel(){
+        boolean[] canEdit = new boolean[]{false,true,false,false,false};
+        public boolean isCellEditable(int rowIndex, int columnIndex){
+            return canEdit[columnIndex];
+        }
+    };
     DefaultTableModel modeloTablaPronosticoDeVentas = new DefaultTableModel();
     
     public PronosticoVentasVista() {
         cargarModeloTablaHistoricoDeVentas();
         cargarModeloTablaPronosticoDeVentas();
         initComponents();
+        initComponents2();
+        
+    }
+    
+    private void initComponents2(){
+        txtPronosticoDeVentas.setEditable(false);
+        txtTotalHistoricoAnio.setEditable(false);
+        txtTotalHistoricoCantidadDeVentas.setEditable(false);
+        txtTotalHistoricoX2.setEditable(false);
+        txtTotalHistoricoY2.setEditable(false);
+        txtTotalHistoricoXY.setEditable(false);
     }
     
     
     // Getters y Setters para el controlador
-    public double getDatosDeVenta() {
-        return Double.parseDouble(txtDatosDeVenta.getText());
+    public String getDatosDeVenta() {
+        return txtDatosDeVenta.getText();
     }
-    public int getAniosAPronosticar() {
-        return Integer.parseInt(txtAniosAPronosticar.getText());
+    public String getAniosAPronosticar() {
+        return txtAniosAPronosticar.getText();
+    }
+    public void setDatosDeVenta(String t){
+        txtDatosDeVenta.setText(t);
+    }
+    public void setAniosAPronosticar(String t){
+        txtAniosAPronosticar.setText(t);
     }
     public void setTotalHistoricoAnio(int anios) {
          txtTotalHistoricoAnio.setText(anios+"");
@@ -405,42 +427,6 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
     private void btnCalcularPronosticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularPronosticoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCalcularPronosticoActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PronosticoVentasVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PronosticoVentasVista().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarAnio;

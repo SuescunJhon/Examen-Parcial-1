@@ -6,6 +6,7 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import modelo.PronosticoVentasModelo;
 import vista.PronosticoVentasVista;
 
@@ -35,30 +36,63 @@ public class PronosticoVentasControlador {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equalsIgnoreCase("Agregar Año")) {
-                int ultimoLista = modelo.getVentas().size();
-                modelo.agregarAnio(vista.getDatosDeVenta());
+            try{
+                if (e.getActionCommand().equalsIgnoreCase("Agregar Año")) {
+                    metodoExepcionesAgregar();
+                    int ultimoLista = modelo.getVentas().size();
+                    modelo.agregarAnio(Double.parseDouble(vista.getDatosDeVenta()));
+                    vista.setDatosDeVenta("");
+                }
+                if (e.getActionCommand().equalsIgnoreCase("Borrar Año")) {
+                    int numLista = vista.numeroFilaSeleccionada();
+                    modelo.borrarAnio(numLista);
+                }
+                if (e.getActionCommand().equalsIgnoreCase("Modificar Año")) {
+
+                }
+                if (e.getActionCommand().equalsIgnoreCase("Nuevo Pronostico")) {
+                    modelo.borrarPronostico();
+                    vista.borrarPronosticoDeVentas();
+                    vista.setPronosticoDeVentas("");
+                }
+                if (e.getActionCommand().equalsIgnoreCase("calcular pronostico")) {
+                    int anios = Integer.parseInt(vista.getAniosAPronosticar());
+                    metodoExcepcionesCalcular();
+                    modelo.setAniosPronosticar(anios);
+                    vista.actualizarPronosticoDeVentas(modelo);
+                    vista.setAniosAPronosticar("");
+                }
+
+                vista.actualizarHistoricoDeVentas(modelo);
+            } catch (MyException ae){
+                JOptionPane.showMessageDialog(null,ae.getMessage());
+            } catch (NumberFormatException oe){
+                JOptionPane.showMessageDialog(null, "Error: Digite un número");
             }
-            if (e.getActionCommand().equalsIgnoreCase("Borrar Año")) {
-                int numLista = vista.numeroFilaSeleccionada();
-                modelo.borrarAnio(numLista);
+        }
+        
+        public void metodoExepcionesAgregar() throws MyException {
+            if(vista.getDatosDeVenta().equalsIgnoreCase("")){
+                throw new MyException("Error: el campo cantidad de venta es obligatorio");
             }
-            if (e.getActionCommand().equalsIgnoreCase("Modificar Año")) {
-                
+        }
+        
+        public void metodoExcepcionesCalcular() throws MyException{
+            if(vista.getAniosAPronosticar().equalsIgnoreCase("")){
+                throw new MyException("Error: el campo cantidad año pronostico es obligatorio");
+            } else if(Integer.parseInt(vista.getAniosAPronosticar()) <= 2){
+                throw new MyException("Error: El pronostico de ventas debe ser mayor a 2");
+            } else if(modelo.getVentas().size() < 3){
+                throw new MyException("Error: se necesitan minimo 3 años en historico de ventas");
             }
-            if (e.getActionCommand().equalsIgnoreCase("Nuevo Pronostico")) {
-                modelo.borrarPronostico();
-                vista.borrarPronosticoDeVentas();
-                vista.setPronosticoDeVentas("");
-            }
-            if (e.getActionCommand().equalsIgnoreCase("calcular pronostico")) {
-                modelo.setAniosPronosticar(vista.getAniosAPronosticar());
-                vista.actualizarPronosticoDeVentas(modelo);
-            }
-            
-            vista.actualizarHistoricoDeVentas(modelo);
         }
         
     }
+    
+    class MyException extends Exception {
+        public MyException(String mensaje){
+        super(mensaje);
+    }
+}
     
 }
