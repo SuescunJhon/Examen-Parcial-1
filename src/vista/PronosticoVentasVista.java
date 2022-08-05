@@ -24,13 +24,13 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
      */
     
     DefaultTableModel modeloTablaHistoricoDeVentas = new DefaultTableModel(){
-        boolean[] canEdit = new boolean[]{false,true,false,false,false};
+        boolean[] canEdit = new boolean[]{false,false,false,false,false};
         public boolean isCellEditable(int rowIndex, int columnIndex){
             return canEdit[columnIndex];
         }
     };
     DefaultTableModel modeloTablaPronosticoDeVentas = new DefaultTableModel();
-    
+
     public PronosticoVentasVista() {
         cargarModeloTablaHistoricoDeVentas();
         cargarModeloTablaPronosticoDeVentas();

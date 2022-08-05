@@ -44,11 +44,16 @@ public class PronosticoVentasControlador {
                     vista.setDatosDeVenta("");
                 }
                 if (e.getActionCommand().equalsIgnoreCase("Borrar Año")) {
+                    metodoExcepcionesBorrar();
                     int numLista = vista.numeroFilaSeleccionada();
                     modelo.borrarAnio(numLista);
                 }
                 if (e.getActionCommand().equalsIgnoreCase("Modificar Año")) {
-
+                    metodoExcepcionesModificar();
+                    int numLista = vista.numeroFilaSeleccionada();
+                    int nuevoValorVenta = Integer.parseInt(vista.getDatosDeVenta());
+                    modelo.getVentas().get(numLista).setCantidadVentas(nuevoValorVenta);
+                     vista.setDatosDeVenta("");
                 }
                 if (e.getActionCommand().equalsIgnoreCase("Nuevo Pronostico")) {
                     modelo.borrarPronostico();
@@ -56,6 +61,7 @@ public class PronosticoVentasControlador {
                     vista.setPronosticoDeVentas("");
                 }
                 if (e.getActionCommand().equalsIgnoreCase("calcular pronostico")) {
+                    vista.borrarPronosticoDeVentas();
                     int anios = Integer.parseInt(vista.getAniosAPronosticar());
                     metodoExcepcionesCalcular();
                     modelo.setAniosPronosticar(anios);
@@ -84,6 +90,20 @@ public class PronosticoVentasControlador {
                 throw new MyException("Error: El pronostico de ventas debe ser mayor a 2");
             } else if(modelo.getVentas().size() < 3){
                 throw new MyException("Error: se necesitan minimo 3 años en historico de ventas");
+            }
+        }
+        
+        public void metodoExcepcionesBorrar() throws MyException{
+            if(vista.numeroFilaSeleccionada() == -1){
+                throw new MyException("Error: Seleccione una fila");
+            }
+        }
+        
+        public void metodoExcepcionesModificar() throws MyException{
+            if(vista.numeroFilaSeleccionada() == -1){
+                throw new MyException("Error: Seleccione la fila que quiere modificar");
+            } else if(vista.getDatosDeVenta().equalsIgnoreCase("")){
+                throw new MyException("Error: Introduzca en el campo cantidad Venta el nuevo valor");
             }
         }
         
