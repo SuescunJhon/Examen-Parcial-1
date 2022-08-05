@@ -5,6 +5,8 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.Vector;
 
 /**
  *
@@ -12,7 +14,7 @@ import java.util.ArrayList;
  */
 public class PronosticoVentasModelo {
     public PronosticoVentasModelo(){
-        ventas = new ArrayList<>();
+        ventas = new Vector<>();
     }
     
     public void setAniosPronosticar(int aniosPronosticar){
@@ -122,49 +124,41 @@ public class PronosticoVentasModelo {
         return pronostico;
     }
     
-    public ArrayList<Venta> getVentas(){
+    public Vector<Venta> getVentas(){
         return ventas;
     }
     
+    public void borrarPronostico(){
+        ventas.clear();
+    }
+    
+    public Object[] retornarFila(int index){
+        Object[] obj = new Object[5];
+        obj[0] = ventas.get(index).getAnio();
+        obj[1] = ventas.get(index).getCantidadVentas();
+        obj[2] = ventas.get(index).calcularAnioCuadrado();
+        obj[3] = ventas.get(index).calcularVentasCuadrado();
+        obj[4] = ventas.get(index).calcularAnioPorVentas();
+        return obj;
+    }
+    
+    public Object[] retornarFilaPronostico(int index){
+        Object[] obj = new Object[aniosPronosticar];
+        int ultimoEnFila = ventas.size();
+        obj[0] = ventas.get(ultimoEnFila-1).getAnio() + index + 1;
+        Formatter formato = new Formatter();
+        formato.format("%.2f",pronostico(ultimoEnFila + index + 1));
+        obj[1] = formato.toString();
+        return obj;
+    }
+    
+    public int getAniosPronosticar(){
+        return aniosPronosticar;
+    }
+    
     // variables de instancia
-    ArrayList<Venta> ventas;
+    Vector<Venta> ventas;
     int aniosPronosticar;
 }
 
-class Venta{
-    public Venta(double cantidadVentas, int anio){
-        this.cantidadVentas = cantidadVentas;
-        this.anio = anio;
-    }
-    
-    public int calcularAnioCuadrado(){
-        return (int)Math.pow(anio,2);
-    }
-    
-    public double calcularVentasCuadrado(){
-        return Math.pow(cantidadVentas, 2);
-    }
-    
-    public double calcularAnioPorVentas(){
-        return anio * cantidadVentas;
-    }
-    
-    public void setAnio(int anio){
-        this.anio = anio;
-    }
-    
-    public int getAnio(){
-        return anio;
-    }
-    
-    public void setCantidadVentas(double cantidadVentas){
-        this.cantidadVentas = cantidadVentas;
-    }
 
-    public double getCantidadVentas(){
-        return cantidadVentas;
-    }
-    
-    private double cantidadVentas;
-    private int anio;
-}

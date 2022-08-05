@@ -6,7 +6,12 @@ package vista;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.Vector;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import modelo.PronosticoVentasModelo;
+import modelo.Venta;
 
 /**
  *
@@ -32,7 +37,7 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
     public double getDatosDeVenta() {
         return Double.parseDouble(txtDatosDeVenta.getText());
     }
-    public double getAniosAPronosticar() {
+    public int getAniosAPronosticar() {
         return Integer.parseInt(txtAniosAPronosticar.getText());
     }
     public void setTotalHistoricoAnio(int anios) {
@@ -50,13 +55,50 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
     public void setTotalHistoricoXY(double xy) {
         txtTotalHistoricoXY.setText(xy+"");
     }
-    public double getPronosticoDeVentas() {
-        return Double.parseDouble(txtPronosticoDeVentas.getText());
+    public void setPronosticoDeVentas(String t) {
+        txtPronosticoDeVentas.setText(t);
     }
     
     public void agregarDatosFilaHistoricoDeVentas(Object[] datos) {
         modeloTablaHistoricoDeVentas.addRow(datos);
     }
+    
+    public int numeroFilaSeleccionada(){
+        return tablaHistoricoDeVentas.getSelectedRow();
+    }
+    
+    public void actualizarHistoricoDeVentas(PronosticoVentasModelo modelo){
+        while(tablaHistoricoDeVentas.getRowCount() != 0){
+            modeloTablaHistoricoDeVentas.removeRow(0);
+        }
+        
+        for(int i=0 ; i<modelo.getVentas().size() ; i++){
+            modeloTablaHistoricoDeVentas.addRow(modelo.retornarFila(i));
+        }
+        
+        txtTotalHistoricoAnio.setText(""+modelo.calcularTotalAnios());
+        txtTotalHistoricoCantidadDeVentas.setText(""+ modelo.calcularTotalVentas());
+        txtTotalHistoricoX2.setText(""+ modelo.calcularTotalAnioCuadrado());
+        txtTotalHistoricoY2.setText(""+ modelo.calcularTotalVentasCuadrado());
+        txtTotalHistoricoXY.setText("" + modelo.calcularTotalAnioPorVentas());
+    }
+    
+    public void actualizarPronosticoDeVentas(PronosticoVentasModelo modelo){
+        for(int i=0 ; i<modelo.getAniosPronosticar() ; i++){
+            modeloTablaPronosticoDeVentas.addRow(modelo.retornarFilaPronostico(i));
+        }
+        Formatter formato = new Formatter();
+        formato.format("%.2f",modelo.calcularCrecimiento() * 100);
+        txtPronosticoDeVentas.setText( formato.toString()+ "%");
+    }
+    
+    public void borrarPronosticoDeVentas(){
+        while(tablaPronosticoDeVentas.getRowCount() != 0){
+            modeloTablaPronosticoDeVentas.removeRow(0);
+        }
+    }
+    
+    
     
     // Modelos de tabla
     public void cargarModeloTablaHistoricoDeVentas() {
@@ -65,6 +107,7 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
         modeloTablaHistoricoDeVentas.addColumn("X^2");
         modeloTablaHistoricoDeVentas.addColumn("Y^2");
         modeloTablaHistoricoDeVentas.addColumn("XY");
+        //modeloTablaHistoricoDeVentas.isCellEditable(0,0);
     }
     
     public void cargarModeloTablaPronosticoDeVentas() {
@@ -84,6 +127,9 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
     }
     public void addBtnNuevoPronosticoListener(ActionListener e) {
         btnNuevoPronostico.addActionListener(e);
+    }
+    public void addBtnCalcularPronosticoListener(ActionListener e){
+        btnCalcularPronostico.addActionListener(e);
     }
     
     /**
@@ -127,6 +173,7 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         btnModificarAnio = new javax.swing.JButton();
+        btnCalcularPronostico = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -168,9 +215,12 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
         btnNuevoPronostico.setText("Nuevo Pronostico");
 
         tablaHistoricoDeVentas.setModel(modeloTablaHistoricoDeVentas);
+        tablaHistoricoDeVentas.setFocusable(false);
+        tablaHistoricoDeVentas.setShowVerticalLines(true);
         jScrollPane1.setViewportView(tablaHistoricoDeVentas);
 
         tablaPronosticoDeVentas.setModel(modeloTablaPronosticoDeVentas);
+        tablaPronosticoDeVentas.setEnabled(false);
         jScrollPane2.setViewportView(tablaPronosticoDeVentas);
 
         jLabel10.setText("Año");
@@ -178,6 +228,13 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
         jLabel11.setText("Cantidad de Ventas");
 
         btnModificarAnio.setText("Modificar Año");
+
+        btnCalcularPronostico.setText("Calcular Pronostico");
+        btnCalcularPronostico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCalcularPronosticoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -222,7 +279,8 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
                                             .addComponent(btnNuevoPronostico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(btnBorrarAnio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(btnAgregarAnio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(btnModificarAnio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(btnModificarAnio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnCalcularPronostico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGap(51, 51, 51))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,7 +300,7 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(txtTotalHistoricoXY, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap(80, Short.MAX_VALUE))))
+                        .addContainerGap(72, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -292,7 +350,9 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModificarAnio)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNuevoPronostico)))
+                        .addComponent(btnNuevoPronostico)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCalcularPronostico)))
                 .addGap(26, 26, 26)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -342,6 +402,10 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAniosAPronosticarActionPerformed
 
+    private void btnCalcularPronosticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularPronosticoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCalcularPronosticoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -381,6 +445,7 @@ public class PronosticoVentasVista extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarAnio;
     private javax.swing.JButton btnBorrarAnio;
+    private javax.swing.JButton btnCalcularPronostico;
     private javax.swing.JButton btnModificarAnio;
     private javax.swing.JButton btnNuevoPronostico;
     private javax.swing.JLabel jLabel1;

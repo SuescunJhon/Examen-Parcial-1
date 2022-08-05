@@ -28,6 +28,7 @@ public class PronosticoVentasControlador {
         this.vista.addBtnBorrarAnioListener(new ManejadorEventos());
         this.vista.addBtnModificarAnioListener(new ManejadorEventos());
         this.vista.addBtnNuevoPronosticoListener(new ManejadorEventos());
+        this.vista.addBtnCalcularPronosticoListener(new ManejadorEventos());
     }
     
     class ManejadorEventos implements ActionListener {
@@ -35,17 +36,27 @@ public class PronosticoVentasControlador {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equalsIgnoreCase("Agregar Año")) {
-                vista.agregarDatosFilaHistoricoDeVentas(new Object[]{1, 2, 3, 4, 5});
+                int ultimoLista = modelo.getVentas().size();
+                modelo.agregarAnio(vista.getDatosDeVenta());
             }
             if (e.getActionCommand().equalsIgnoreCase("Borrar Año")) {
-                
+                int numLista = vista.numeroFilaSeleccionada();
+                modelo.borrarAnio(numLista);
             }
             if (e.getActionCommand().equalsIgnoreCase("Modificar Año")) {
                 
             }
             if (e.getActionCommand().equalsIgnoreCase("Nuevo Pronostico")) {
-                
+                modelo.borrarPronostico();
+                vista.borrarPronosticoDeVentas();
+                vista.setPronosticoDeVentas("");
             }
+            if (e.getActionCommand().equalsIgnoreCase("calcular pronostico")) {
+                modelo.setAniosPronosticar(vista.getAniosAPronosticar());
+                vista.actualizarPronosticoDeVentas(modelo);
+            }
+            
+            vista.actualizarHistoricoDeVentas(modelo);
         }
         
     }
